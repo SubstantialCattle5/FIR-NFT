@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
 // only owner? 
 // array of criminals - only owner 
 // criminal - how many cases and the data 
+// check data person 
 
 contract FIR{
     address public owner;
@@ -60,5 +61,13 @@ contract FIR{
               return(fir[i].victimName, fir[i].date, fir[i].time, fir[i].incident, fir[i].witnessNames, fir[i].descriptionOfTheAccused, fir[i].policeName, fir[i].policeRank, fir[i].policeDepartment);
            }    
         }
+    }
+
+    // checks whether the person has any previous record 
+    function checkDataPerson(uint _entryno) public view returns(bool){
+        for(uint i=0; i<DataCriminal.length; i++)
+        {
+           return keccak256(abi.encodePacked(DataCriminal[i]))==keccak256(abi.encodePacked(AllFIR[_entryno].name));      
+      }
     }
 }
