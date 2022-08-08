@@ -33,9 +33,14 @@ contract FIR{
     }
     // FIR 
     
-    // entry number => firData 
+    // criminal count index => firData 
     mapping(uint256 => dataPerson) public fir ; 
     uint256 internal criminalCount = 0 ;
+       
+       // only owner functions 
+    modifier onlyOwner {
+      require(msg.sender == owner);
+      _; } 
 
     // user can enter the function and return a flag if it has been accepted
     function entry(string memory _accusedName,  
@@ -79,10 +84,15 @@ contract FIR{
     }
 
     // checks whether the person has any previous record 
-    function checkDataPerson(uint _entryno) public view returns(bool){
-        for(uint i=0; i<DataCriminal.length; i++)
-        {
-           return keccak256(abi.encodePacked(DataCriminal[i]))==keccak256(abi.encodePacked(AllFIR[_entryno].name));      
+    function checkDataPerson(uint _entryno) public view onlyOwner returns(bool) {
+        for(uint i=0; i<DataCriminal.length; i++){
+           return keccak256(abi.encodePacked(DataCriminal[i]))==keccak256(abi.encodePacked(fir[_entryno].accusedName));      
       }
     }
+
+
+
+    // list of criminals  
+
+    
 }

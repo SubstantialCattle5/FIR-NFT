@@ -9,5 +9,6 @@ def deploy():
     FIR.deploy({
         'from' : account
     })
+    
 def main():
     deploy()
