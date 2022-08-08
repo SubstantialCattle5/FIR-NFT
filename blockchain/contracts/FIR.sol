@@ -8,8 +8,6 @@ pragma solidity ^0.8.0;
 // criminal - how many cases and the data 
 // check data person 
 
-
-
 contract FIR{
     address public owner;
     //address of the person deploying the smart contract
@@ -43,7 +41,7 @@ contract FIR{
       _; } 
 
     // user can enter the function and return a flag if it has been accepted
-    function entry(string memory _accusedName,  
+    function entry(uint256 _entryno, string memory _accusedName,  
         string memory _victimName, 
         string memory _date , 
         string memory _time, 
@@ -52,35 +50,22 @@ contract FIR{
         string memory _descriptionOfTheAccused,
         string memory _policeName ,
         string memory _policeRank ,
-        string memory _policeDepartment) public returns(bool flag){
-            if (msg.sender == owner){
-                dataPerson memory fir_data ;
-                fir_data.accusedName = _accusedName ; 
-                fir_data.victimName = _victimName ; 
-                fir_data.date = _date ; 
-                fir_data.time = _time ; 
-                fir_data.incident = _incident ; 
-                fir_data.witnessNames = _witnessNames ; 
-                fir_data.descriptionOfTheAccused = _descriptionOfTheAccused ;
-                fir_data.policeName = _policeName ;
-                fir_data.policeRank = _policeRank ;  
-                fir_data.policeDepartment = _policeDepartment ;    
-                // adding the fir 
-                fir[criminalCount] = fir_data ; 
-                // adding the user 
-                DataCriminal.push(_accusedName) ; 
-                flag = true ; 
-            }            
-            else {
-                flag = false ; 
-            }
+        string memory _policeDepartment) public{
+           fir[_entryno] = dataPerson(_accusedName,_victimName,_date,_time,_incident,_witnessNames,_descriptionOfTheAccused, _policeName, _policeRank, _policeDepartment);
+           ++criminalCount;
         }
 
     // 
     
     // retrieve 
-    function retrieve(string memory _accusedName) public {
-
+    function retrieve(uint256 _entryno) public view returns(string memory _victimName, string memory _date, string memory _time, string memory _incident, string memory _witnessNames, string memory _descriptionOfTheAccused, string memory _policeName, string memory _policeRank, string memory _policeDepartment){    
+        for(uint256 i=0; i<criminalCount ; i++)
+        {
+           if (keccak256(abi.encodePacked(fir[_entryno].accusedName))==keccak256(abi.encodePacked(fir[i].accusedName)))
+           {
+              return(fir[i].victimName, fir[i].date, fir[i].time, fir[i].incident, fir[i].witnessNames, fir[i].descriptionOfTheAccused, fir[i].policeName, fir[i].policeRank, fir[i].policeDepartment);
+           }    
+        }
     }
 
     // checks whether the person has any previous record 
