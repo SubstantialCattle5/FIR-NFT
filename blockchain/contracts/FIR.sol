@@ -35,13 +35,13 @@ contract FIR{
     mapping(uint256 => dataPerson) public fir ; 
     uint256 internal criminalCount = 0 ;
        
-       // only owner functions 
+    // only owner functions 
     modifier onlyOwner {
       require(msg.sender == owner);
       _; } 
 
     // user can enter the function and return a flag if it has been accepted
-    function entry(uint256 _entryno, string memory _accusedName,  
+    function entry(string memory _accusedName,  
         string memory _victimName, 
         string memory _date , 
         string memory _time, 
@@ -50,10 +50,11 @@ contract FIR{
         string memory _descriptionOfTheAccused,
         string memory _policeName ,
         string memory _policeRank ,
-        string memory _policeDepartment) public{
-           fir[_entryno] = dataPerson(_accusedName,_victimName,_date,_time,_incident,_witnessNames,_descriptionOfTheAccused, _policeName, _policeRank, _policeDepartment);
+        string memory _policeDepartment) public onlyOwner{        
+           fir[criminalCount] = dataPerson(_accusedName,_victimName,_date,_time,_incident,_witnessNames,_descriptionOfTheAccused, _policeName, _policeRank, _policeDepartment);
            ++criminalCount;
-        }
+           DataCriminal.push(_accusedName); 
+           }
 
     // 
     
@@ -69,9 +70,9 @@ contract FIR{
     }
 
     // checks whether the person has any previous record 
-    function checkDataPerson(uint _entryno) public view onlyOwner returns(bool) {
+    function checkDataPerson(uint _entryno) public view onlyOwner returns(bool flag) {
         for(uint i=0; i<DataCriminal.length; i++){
-           return keccak256(abi.encodePacked(DataCriminal[i]))==keccak256(abi.encodePacked(fir[_entryno].accusedName));      
+           flag = keccak256(abi.encodePacked(DataCriminal[i]))==keccak256(abi.encodePacked(fir[_entryno].accusedName));      
       }
     }
 
