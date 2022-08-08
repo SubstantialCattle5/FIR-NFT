@@ -18,7 +18,7 @@ contract FIR{
     
     string[] public DataCriminal = ["Sai","Nilay","Zayan","Karthik","Samir"];
     
-    struct DataPerson{
+    struct dataPerson{
         string accusedName ; 
         string victimName ; 
         string date ; 
@@ -26,22 +26,54 @@ contract FIR{
         string incident ; 
         string witnessNames ; 
         string descriptionOfTheAccused ; 
-    }
-    struct PoliceUserInfo{
-        string name ; 
-        string rank ; 
-        string department ; 
+        string policeName ; 
+        string policeRank ; 
+        string policeDepartment ; 
     }
     // FIR 
-    struct firData{
-        DataPerson data ; 
-        PoliceUserInfo police  ; 
-    } 
     
     // entry number => firData 
-    mapping(uint256 => firData) public fir ; 
+    mapping(uint256 => dataPerson) public fir ; 
+    uint256 internal criminalCount = 0 ;
 
+    // user can enter the function and return a flag if it has been accepted
+    function entry(string memory _accusedName,  
+        string memory _victimName, 
+        string memory _date , 
+        string memory _time, 
+        string memory _incident, 
+        string memory _witnessNames, 
+        string memory _descriptionOfTheAccused,
+        string memory _policeName ,
+        string memory _policeRank ,
+        string memory _policeDepartment) public returns(bool flag){
+            if (msg.sender == owner){
+                dataPerson memory fir_data ;
+                fir_data.accusedName = _accusedName ; 
+                fir_data.victimName = _victimName ; 
+                fir_data.date = _date ; 
+                fir_data.time = _time ; 
+                fir_data.incident = _incident ; 
+                fir_data.witnessNames = _witnessNames ; 
+                fir_data.descriptionOfTheAccused = _descriptionOfTheAccused ;
+                fir_data.policeName = _policeName ;
+                fir_data.policeRank = _policeRank ;  
+                fir_data.policeDepartment = _policeDepartment ;    
+                // adding the fir 
+                fir[criminalCount] = fir_data ; 
+                // adding the user 
+                DataCriminal.push(_accusedName) ; 
+                flag = true ; 
+            }            
+            else {
+                flag = false ; 
+            }
+        }
+
+    // 
     
+    // retrieve 
+    function retrieve(string memory _accusedName) public {
 
-
+    }
 }
